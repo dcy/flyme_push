@@ -1,0 +1,19 @@
+{application, flyme_push,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { flyme_push_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    lager,
+    jiffy,
+    hackney
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.
