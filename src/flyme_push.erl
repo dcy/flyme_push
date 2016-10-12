@@ -98,10 +98,10 @@ unvarnished_all(AppId, AppSecret, Content) ->
 
 gen_sign(Maps, AppSecret) ->
     Fun = fun({K, V}, TempStr) ->
-                  TempStr ++ to_list(K) ++ "=" ++ to_list(V)
+                  TempStr ++ eutil:to_list(K) ++ "=" ++ eutil:to_list(V)
           end,
     KvStr = lists:foldl(Fun, "", lists:sort(maps:to_list(Maps))),
-    md5_hex(KvStr ++ AppSecret).
+    eutil:md5_hex(KvStr ++ AppSecret).
 
 send(AppId, AppSecret, URL, PayloadMaps) ->
     AppIdMaps = PayloadMaps#{<<"appId">> => AppId},
@@ -122,29 +122,3 @@ send(AppId, AppSecret, URL, PayloadMaps) ->
             lager:error("flyme_push error, PayloadMaps:~p, Result:~p", [SignMaps, Result]),
             ok
     end.
-
-to_list(Item) when is_integer(Item) ->
-    erlang:integer_to_list(Item);
-to_list(Item) when is_binary(Item) ->
-    erlang:binary_to_list(Item);
-to_list(Item) when is_list(Item) ->
-    Item;
-to_list(Item) when is_atom(Item) ->
-    erlang:atom_to_list(Item).
-
-
-md5_hex(S) ->
-	Md5_bin = erlang:md5(S),
-	Md5_list = binary_to_list(Md5_bin),
-	lists:flatten(list_to_hex(Md5_list)).
-
-list_to_hex(L) ->
-	lists:map(fun(X) -> int_to_hex(X) end, L).
-
-int_to_hex(N) when N < 256 ->
-	[hex(N div 16), hex(N rem 16)].
-
-hex(N) when N < 10 ->
-	$0 + N;
-hex(N) when N >= 10, N < 16 ->
-	$a + (N - 10).
