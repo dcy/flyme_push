@@ -1,13 +1,22 @@
 -module(flyme_push).
 
 %% API
--export([notification/5,
-         unvarnished/4
+-export([notification/3, notification/5,
+         notification_tags/4, notification_tags/6,
+         notification_all/2, notification_all/4,
+         unvarnished/2, unvarnished/4,
+         unvarnished_tags/3, unvarnished_tags/5,
+         unvarnished_all/1, unvarnished_all/3
         ]).
 
 -export([send/4]).
 
 -define(HEADERS, [{<<"Content-Type">>, <<"application/x-www-form-urlencoded; charset=utf-8">>}]).
+
+notification(PushIds, Title, Content) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    notification(AppId, AppSecret, PushIds, Title, Content).
 
 notification(AppId, AppSecret, PushIds, Title, Content) ->
     NoticeBarInfo = #{<<"noticeBarType">> => 0,
@@ -19,6 +28,41 @@ notification(AppId, AppSecret, PushIds, Title, Content) ->
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
+%% Scope 0并集 1交集
+notification_tags(Tags, Scope, Title, Content) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    notification_tags(AppId, AppSecret, Tags, Scope, Title, Content).
+
+notification_tags(AppId, AppSecret, Tags, Scope, Title, Content) ->
+    NoticeBarInfo = #{<<"title">> => unicode:characters_to_binary(Title),
+                      <<"content">> => unicode:characters_to_binary(Content)},
+    MessageJson = jiffy:encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
+    PayloadMaps = #{<<"pushType">> => 0,
+                    <<"tagNames">> => Tags,
+                    <<"scope">> => Scope,
+                    <<"messageJson">> => MessageJson},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
+    send(AppId, AppSecret, URL, PayloadMaps).
+
+notification_all(Title, Content) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    notification_all(AppId, AppSecret, Title, Content).
+
+notification_all(AppId, AppSecret, Title, Content) ->
+    NoticeBarInfo = #{<<"title">> => unicode:characters_to_binary(Title),
+                      <<"content">> => unicode:characters_to_binary(Content)},
+    MessageJson = jiffy:encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
+    PayloadMaps = #{<<"pushType">> => 0, <<"messageJson">> => MessageJson},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
+    send(AppId, AppSecret, URL, PayloadMaps).
+
+unvarnished(PushIds, Content) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    unvarnished(AppId, AppSecret, PushIds, Content).
+
 unvarnished(AppId, AppSecret, PushIds, Content) ->
     MessageJson = jiffy:encode(#{<<"content">> => Content}),
     PayloadMaps = #{<<"pushIds">> => list_to_binary(PushIds),
@@ -26,9 +70,30 @@ unvarnished(AppId, AppSecret, PushIds, Content) ->
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/unvarnished/pushByPushId">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
+unvarnished_tags(Tags, Scope, Content) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    unvarnished_tags(AppId, AppSecret, Tags, Scope, Content).
 
+unvarnished_tags(AppId, AppSecret, Tags, Scope, Content) ->
+    MessageJson = jiffy:encode(#{<<"content">> => Content}),
+    PayloadMaps = #{<<"pushType">> => 1,
+                    <<"tagNames">> => Tags,
+                    <<"scope">> => Scope,
+                    <<"messageJson">> => MessageJson},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
+    send(AppId, AppSecret, URL, PayloadMaps).
 
+unvarnished_all(Content) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    unvarnished_all(AppId, AppSecret, Content).
 
+unvarnished_all(AppId, AppSecret, Content) ->
+    MessageJson = jiffy:encode(#{<<"content">> => Content}),
+    PayloadMaps = #{<<"pushType">> => 1, <<"messageJson">> => MessageJson},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
+    send(AppId, AppSecret, URL, PayloadMaps).
 
 
 gen_sign(Maps, AppSecret) ->
