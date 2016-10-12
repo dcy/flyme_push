@@ -1,5 +1,5 @@
 # flyme_push
-> 魅族Flyme推送push server sdk for Erlang
+> 魅族Flyme推送push server sdk for Erlang    
 > 集成版本：https://github.com/dcy/epush
 
 ## 通知栏
