@@ -90,7 +90,7 @@ unvarnished_all(Content) ->
     unvarnished_all(AppId, AppSecret, Content).
 
 unvarnished_all(AppId, AppSecret, Content) ->
-    MessageJson = jiffy:encode(#{<<"content">> => Content}),
+    MessageJson = jiffy:encode(#{<<"title">> => <<"unvarnished_all">>, <<"content">> => Content}),
     PayloadMaps = #{<<"pushType">> => 1, <<"messageJson">> => MessageJson},
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
     send(AppId, AppSecret, URL, PayloadMaps).

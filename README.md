@@ -1,4 +1,6 @@
 # flyme_push
+> 魅族Flyme推送push server sdk for Erlang
+> 集成版本：https://github.com/dcy/epush
 
 ## 通知栏
     通知栏主要是两个字段Title和Content
@@ -12,20 +14,65 @@ flyme_push:notification("UU34b4f75595d58540a78407f4d5a60630642497c5c5e", "Hello"
 
 * notification(AppId, AppSecret, PushIds, Title, Content):
 ```erlang
-flyme_push:notification(123456, "FlymeAppSecret", "UU34b4f75595d58540a78407f4d5a60630642497c5c5e", "Hello", "World").
+flyme_push:notification(123456, "AppSecret", "UU34b4f75595d58540a78407f4d5a60630642497c5c5e", "Hello", "World").
 ```
 
-### unvarnished: 根据PushIds推送透传消息
+### notification_tags: 根据tags推送通知栏消息
 
+* notification_tags(Tags, Scope, Title, Content)
+    Scope 0并集 1交集
+```erlang
+flyme_push:notification_tags("tag1,tag2", 0, "hello", "world").
+```
+
+* notification_tags(AppId, AppSecret, Tags, Scope, Title, Content)
+```erlang
+flyme_push:notification_tags(123456, "AppSecret", "tag1,tag2", 0, "hello", "world").
+```
+
+### notification_all: 推送全部用户通知栏消息
+
+* notification_all(Title, Content)
+```erlang
+flyme_push:notification_all("hello", "world").
+```
+
+* notification_all(AppId, AppSecret, Title, Content)
+```erlang
+flyme_push:notification_all(123456, "AppSecret", "hello", "world").
+```
+
+## 透传
+    主要字段Content
+
+### unvarnished: 根据PushIds推送透传消息
 
 * unvarnished(PushIds, Content)
 ```erlang
 flyme_push:unvarnished("UU34b4f75595d58540a78407f4d5a60630642497c5c5e", jiffy:encode(#{<<"hello">> => <<"world">>})).
 ```
-
 * unvarnished(AppId, AppSecret, PushIds, Content)
 ```erlang
-flyme_push:unvarnished(123456, "FlymeAppSecret", "UU34b4f75595d58540a78407f4d5a60630642497c5c5e", jiffy:encode(#{<<"hello">> => <<"world">>})).
+flyme_push:unvarnished(123456, "AppSecret", "UU34b4f75595d58540a78407f4d5a60630642497c5c5e", jiffy:encode(#{<<"hello">> => <<"world">>})).
 ```
+
+### unvarnished_tags: 根据tags推送透传信息
+
+* unvarnished_tags(Tags, Scope, Content)
+```erlang
+flyme_push:unvarnished_tags("tag1,tag2", 0, jiffy:encode(#{<<"hello">> => <<"world">>})).
+```
+* unvarnished_tags(AppId, AppSecret, Tags, Scope, Content)
+```erlang
+flyme_push:unvarnished_tags(123456, "AppSecret", "tag1,tag2", 0, jiffy:encode(#{<<"hello">> => <<"world">>})).
+```
+
+### unvarnished_all: 推送全部用户透传消息
+
+* unvarnished_all(Content)
+```erlang
+flyme_push:unvarnished_all(jiffy:encode(#{<<"hello">> => <<"world">>})).
+```
+
 
 
