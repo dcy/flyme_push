@@ -9,12 +9,12 @@
 
 * notification(PushIds, Title, Content):
 ```erlang
-flyme_push:notification("UU34b4f75595d58540a78407f4d5a60630642497c5c5e", "Hello", "World").
+flyme_push:notification("PushIds", "Hello", "World").
 ```
 
 * notification(AppId, AppSecret, PushIds, Title, Content):
 ```erlang
-flyme_push:notification(123456, "AppSecret", "UU34b4f75595d58540a78407f4d5a60630642497c5c5e", "Hello", "World").
+flyme_push:notification(123456, "AppSecret", "PushIds", "Hello", "World").
 ```
 
 ### notification_tags: 根据tags推送通知栏消息
@@ -49,11 +49,11 @@ flyme_push:notification_all(123456, "AppSecret", "hello", "world").
 
 * unvarnished(PushIds, Content)
 ```erlang
-flyme_push:unvarnished("UU34b4f75595d58540a78407f4d5a60630642497c5c5e", jiffy:encode(#{<<"hello">> => <<"world">>})).
+flyme_push:unvarnished("PushIds", jiffy:encode(#{<<"hello">> => <<"world">>})).
 ```
 * unvarnished(AppId, AppSecret, PushIds, Content)
 ```erlang
-flyme_push:unvarnished(123456, "AppSecret", "UU34b4f75595d58540a78407f4d5a60630642497c5c5e", jiffy:encode(#{<<"hello">> => <<"world">>})).
+flyme_push:unvarnished(123456, "AppSecret", "PushIds", jiffy:encode(#{<<"hello">> => <<"world">>})).
 ```
 
 ### unvarnished_tags: 根据tags推送透传信息
