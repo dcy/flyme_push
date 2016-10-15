@@ -1,6 +1,6 @@
 # flyme_push
 > 魅族Flyme推送push server sdk for Erlang    
-> 集成版本：https://github.com/dcy/epush
+> 集成版本：https://github.com/dcy/epush    
 > 使用例子：[/src/flyme_push_example.erl](/src/flyme_push_example.erl)
 
 ## 通知栏 varnished notification 两个是一样的
