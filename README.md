@@ -10,17 +10,17 @@
 
 * varnished(PayloadMaps) ->
 ```erlang
-    Maps = #{<<"appId">> => 123456,
-             <<"messageJson">> => <<"{\"noticeBarInfo\":{\"title\":\"Hello\",\"noticeBarType\":0,\"content\":\"World\"}}">>,
-             <<"pushIds">> => list_to_binary(?DEVICE_TOKEN),
-             <<"sign">> => "varnished_sign"},
-    flyme_push:varnished(Maps).
+Maps = #{<<"appId">> => 123456,
+         <<"messageJson">> => <<"{\"noticeBarInfo\":{\"title\":\"Hello\",\"noticeBarType\":0,\"content\":\"World\"}}">>,
+         <<"pushIds">> => list_to_binary(?DEVICE_TOKEN),
+         <<"sign">> => "varnished_sign"},
+flyme_push:varnished(Maps).
 ```
 * varnished(PushIds, Title, Content):
 * varnished(AppId, AppSecret, PayloadMaps) when is_map(PayloadMaps) ->
 * varnished(AppId, AppSecret, PushIds, Title, Content):
 ```erlang
-    flyme_push:notification("PushIds", "Hello", "World").
+flyme_push:notification("PushIds", "Hello", "World").
 ```
 
 ### varnished_tags(notification_tags): 根据tags推送通知栏消息
@@ -29,7 +29,7 @@
 * varnished_tags(AppId, AppSecret, Tags, Scope, Title, Content) ->
     Scope 0并集 1交集
 ```erlang
-    flyme_push:varnished_tags("tag1,tag2", 0, "hello", "world").
+flyme_push:varnished_tags("tag1,tag2", 0, "hello", "world").
 ```
 
 ### varnished_all(notification_all): 推送全部用户通知栏消息
@@ -38,7 +38,7 @@
 * varnished_all(Title, Content) ->
 * varnished_all(AppId, AppSecret, Title, Content) ->
 ```erlang
-    flyme_push:varnished_all("hello", "world").
+flyme_push:varnished_all("hello", "world").
 ```
 
 ## 透传
@@ -50,7 +50,7 @@
 * unvarnished(PushIds, Content)
 * unvarnished(AppId, AppSecret, PushIds, Content) ->
 ```erlang
-    flyme_push:unvarnished("PushIds", jiffy:encode(#{<<"hello">> => <<"world">>})).
+flyme_push:unvarnished("PushIds", jiffy:encode(#{<<"hello">> => <<"world">>})).
 ```
 
 ### unvarnished_tags: 根据tags推送透传信息
@@ -58,7 +58,7 @@
 * unvarnished_tags(Tags, Scope, Content)
 * unvarnished_tags(AppId, AppSecret, Tags, Scope, Content) ->
 ```erlang
-    flyme_push:unvarnished_tags("tag1,tag2", 0, jiffy:encode(#{<<"hello">> => <<"world">>})).
+flyme_push:unvarnished_tags("tag1,tag2", 0, jiffy:encode(#{<<"hello">> => <<"world">>})).
 ```
 
 ### unvarnished_all: 推送全部用户透传消息
@@ -66,5 +66,5 @@
 * unvarnished_all(Content)
 * unvarnished_all(AppId, AppSecret, Content) ->
 ```erlang
-    flyme_push:unvarnished_all(jiffy:encode(#{<<"hello">> => <<"world">>})).
+flyme_push:unvarnished_all(jiffy:encode(#{<<"hello">> => <<"world">>})).
 ```
