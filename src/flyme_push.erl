@@ -8,6 +8,8 @@
          unvarnished_tags/1, unvarnished_tags/3, unvarnished_tags/5,
          unvarnished_all/1, unvarnished_all/3,
 
+         general_notification/5, general_app_msg/4,
+
          notification/1, notification/3, notification/5,
          notification_tags/1, notification_tags/4, notification_tags/6,
          notification_all/1, notification_all/2, notification_all/4
@@ -187,3 +189,10 @@ do_send(URL, PayloadMaps) ->
             lager:error("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
             ok
     end.
+
+
+general_notification(AppId, AppSecret, PushIds, Title, Content) ->
+    varnished(AppId, AppSecret, PushIds, Title, Content).
+
+general_app_msg(AppId, AppSecret, PushIds, Content) ->
+    unvarnished(AppId, AppSecret, PushIds, Content).
