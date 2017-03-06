@@ -47,7 +47,7 @@ varnished(AppId, AppSecret, PushIds, Title, Content) ->
                       <<"title">> => unicode:characters_to_binary(Title),
                       <<"content">> => unicode:characters_to_binary(Content)},
     MessageJson = jiffy:encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
-    PayloadMaps = #{<<"pushIds">> => list_to_binary(PushIds),
+    PayloadMaps = #{<<"pushIds">> => eutil:to_binary(PushIds),
                     <<"messageJson">> => MessageJson},
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
     send(AppId, AppSecret, URL, PayloadMaps).
@@ -122,7 +122,7 @@ unvarnished(PushIds, Content) ->
 
 unvarnished(AppId, AppSecret, PushIds, Content) ->
     MessageJson = jiffy:encode(#{<<"content">> => Content}),
-    PayloadMaps = #{<<"pushIds">> => list_to_binary(PushIds),
+    PayloadMaps = #{<<"pushIds">> => eutil:to_binary(PushIds),
                     <<"messageJson">> => MessageJson},
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/unvarnished/pushByPushId">>,
     send(AppId, AppSecret, URL, PayloadMaps).
