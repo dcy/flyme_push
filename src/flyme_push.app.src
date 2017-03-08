@@ -6,9 +6,6 @@
   {applications,
    [kernel,
     stdlib,
-    eutil,
-    lager,
-    jsone,
     hackney,
     eutil
    ]},

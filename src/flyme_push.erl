@@ -46,7 +46,7 @@ varnished(AppId, AppSecret, PushIds, Title, Content) ->
     NoticeBarInfo = #{<<"noticeBarType">> => 0,
                       <<"title">> => unicode:characters_to_binary(Title),
                       <<"content">> => unicode:characters_to_binary(Content)},
-    MessageJson = jsone:encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
+    MessageJson = eutil:json_encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
     PayloadMaps = #{<<"pushIds">> => eutil:to_binary(PushIds),
                     <<"messageJson">> => MessageJson},
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
@@ -77,7 +77,7 @@ notification_tags(AppId, AppSecret, Tags, Scope, Title, Content) ->
 varnished_tags(AppId, AppSecret, Tags, Scope, Title, Content) ->
     NoticeBarInfo = #{<<"title">> => unicode:characters_to_binary(Title),
                       <<"content">> => unicode:characters_to_binary(Content)},
-    MessageJson = jsone:encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
+    MessageJson = eutil:json_encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
     PayloadMaps = #{<<"pushType">> => 0,
                     <<"tagNames">> => Tags,
                     <<"scope">> => Scope,
@@ -106,7 +106,7 @@ notification_all(AppId, AppSecret, Title, Content) ->
 varnished_all(AppId, AppSecret, Title, Content) ->
     NoticeBarInfo = #{<<"title">> => unicode:characters_to_binary(Title),
                       <<"content">> => unicode:characters_to_binary(Content)},
-    MessageJson = jsone:encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
+    MessageJson = eutil:json_encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
     PayloadMaps = #{<<"pushType">> => 0, <<"messageJson">> => MessageJson},
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
     send(AppId, AppSecret, URL, PayloadMaps).
@@ -121,7 +121,7 @@ unvarnished(PushIds, Content) ->
     unvarnished(AppId, AppSecret, PushIds, Content).
 
 unvarnished(AppId, AppSecret, PushIds, Content) ->
-    MessageJson = jsone:encode(#{<<"content">> => Content}),
+    MessageJson = eutil:json_encode(#{<<"content">> => Content}),
     PayloadMaps = #{<<"pushIds">> => eutil:to_binary(PushIds),
                     <<"messageJson">> => MessageJson},
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/unvarnished/pushByPushId">>,
@@ -137,7 +137,7 @@ unvarnished_tags(Tags, Scope, Content) ->
     unvarnished_tags(AppId, AppSecret, Tags, Scope, Content).
 
 unvarnished_tags(AppId, AppSecret, Tags, Scope, Content) ->
-    MessageJson = jsone:encode(#{<<"content">> => Content}),
+    MessageJson = eutil:json_encode(#{<<"content">> => Content}),
     PayloadMaps = #{<<"pushType">> => 1,
                     <<"tagNames">> => Tags,
                     <<"scope">> => Scope,
@@ -154,7 +154,7 @@ unvarnished_all(Content) ->
     unvarnished_all(AppId, AppSecret, Content).
 
 unvarnished_all(AppId, AppSecret, Content) ->
-    MessageJson = jsone:encode(#{<<"title">> => <<"unvarnished_all">>, <<"content">> => Content}),
+    MessageJson = eutil:json_encode(#{<<"title">> => <<"unvarnished_all">>, <<"content">> => Content}),
     PayloadMaps = #{<<"pushType">> => 1, <<"messageJson">> => MessageJson},
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
     send(AppId, AppSecret, URL, PayloadMaps).
@@ -180,7 +180,7 @@ do_send(URL, PayloadMaps) ->
     {ok, _StatusCode, _RespHeaders, ClientRef} = hackney:request(Method, URL, ?HEADERS,
                                                                  Payload, Options),
     {ok, ResultBin} = hackney:body(ClientRef),
-    Result = jsone:decode(ResultBin),
+    Result = eutil:json_decode(ResultBin),
     %%todo: 1003服务器忙要不要返回队列
     case maps:get(<<"code">>, Result) of
         <<"200">> ->
