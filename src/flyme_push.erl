@@ -182,13 +182,21 @@ do_send(URL, PayloadMaps) ->
     {ok, ResultBin} = hackney:body(ClientRef),
     Result = eutil:json_decode(ResultBin),
     %%todo: 1003服务器忙要不要返回队列
-    case maps:get(<<"code">>, Result) of
+    #{<<"code">> := Code, <<"value">> := Value} = Result,
+    case Code of
         <<"200">> ->
-            ok;
+            case Value == #{} of
+                true ->
+                    {ok, Result};
+                false ->
+                    ?ERROR_MSG("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
+                    {push_id_illegal, Result}
+            end;
         _ ->
-            lager:error("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
-            ok
+            ?ERROR_MSG("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
+            {error, Result}
     end.
+
 
 
 general_notification(AppId, AppSecret, PushIds, Title, Content) ->
