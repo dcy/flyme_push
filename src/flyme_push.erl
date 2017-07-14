@@ -12,7 +12,15 @@
 
          notification/1, notification/3, notification/5,
          notification_tags/1, notification_tags/4, notification_tags/6,
-         notification_all/1, notification_all/2, notification_all/4
+         notification_all/1, notification_all/2, notification_all/4,
+
+         get_register_switch/1, get_register_switch/3,
+         change_register_switch/3, change_register_switch/5,
+         change_all_switch/2, change_all_switch/4,
+         subscribe_tags/2, subscribe_tags/4,
+         unsubscribe_tags/2, unsubscribe_tags/4,
+         get_sub_tags/1, get_sub_tags/3,
+         unsub_all_tags/1, unsub_all_tags/3
         ]).
 
 -export([send/4]).
@@ -159,6 +167,88 @@ unvarnished_all(AppId, AppSecret, Content) ->
     URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
+get_register_switch(PushId) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    get_register_switch(AppId, AppSecret, PushId).
+
+get_register_switch(AppId, AppSecret, PushId) ->
+    PayloadMaps = #{<<"pushId">> => eutil:to_binary(PushId)},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/message/getRegisterSwitch">>,
+    http_req(AppId, AppSecret, URL, PayloadMaps).
+
+change_register_switch(PushId, MsgType, SubSwitch) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    change_register_switch(AppId, AppSecret, PushId, MsgType, SubSwitch).
+
+change_register_switch(AppId, AppSecret, PushId, MsgType, SubSwitch) ->
+    PayloadMaps = #{<<"pushId">> => eutil:to_binary(PushId), <<"msgType">> => MsgType,
+                    <<"subSwitch">> => SubSwitch},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/message/changeRegisterSwitch">>,
+    http_req(AppId, AppSecret, URL, PayloadMaps).
+
+change_all_switch(PushId, SubSwitch) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    change_all_switch(AppId, AppSecret, PushId, SubSwitch).
+
+change_all_switch(AppId, AppSecret, PushId, SubSwitch) ->
+    PayloadMaps = #{<<"pushId">> => PushId, <<"subSwitch">> => SubSwitch},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/message/changeAllSwitch">>,
+    http_req(AppId, AppSecret, URL, PayloadMaps).
+
+subscribe_tags(PushId, Tags) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    subscribe_tags(AppId, AppSecret, PushId, Tags).
+
+subscribe_tags(AppId, AppSecret, PushId, Tags) ->
+    PayloadMaps = #{<<"pushId">> => PushId, <<"tags">> => Tags},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/message/subscribeTags">>,
+    http_req(AppId, AppSecret, URL, PayloadMaps).
+
+unsubscribe_tags(PushId, Tags) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    unsubscribe_tags(AppId, AppSecret, PushId, Tags).
+
+unsubscribe_tags(AppId, AppSecret, PushId, Tags) ->
+    PayloadMaps = #{<<"pushId">> => PushId, <<"tags">> => Tags},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/message/unSubscribeTags">>,
+    http_req(AppId, AppSecret, URL, PayloadMaps).
+
+unsub_all_tags(PushId) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    unsub_all_tags(AppId, AppSecret, PushId).
+
+unsub_all_tags(AppId, AppSecret, PushId) ->
+    PayloadMaps = #{<<"pushId">> => PushId},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/message/unSubAllTags">>,
+    http_req(AppId, AppSecret, URL, PayloadMaps).
+
+
+get_sub_tags(PushId) ->
+    {ok, AppId} = application:get_env(flyme_push, app_id),
+    {ok, AppSecret} = application:get_env(flyme_push, app_secret),
+    get_sub_tags(AppId, AppSecret, PushId).
+
+get_sub_tags(AppId, AppSecret, PushId) ->
+    PayloadMaps = #{<<"pushId">> => PushId},
+    URL = <<"http://api-push.meizu.com/garcia/api/server/message/getSubTags">>,
+    http_req(AppId, AppSecret, URL, PayloadMaps).
+
+
+
+
+
+
+
+    
+
+
+
 
 gen_sign(Maps, AppSecret) ->
     Fun = fun({K, V}, TempStr) ->
@@ -196,6 +286,31 @@ do_send(URL, PayloadMaps) ->
             ?ERROR_MSG("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
             {error, Result}
     end.
+
+http_req(AppId, AppSecret, URL, PayloadMaps) ->
+    AppIdMaps = PayloadMaps#{<<"appId">> => AppId},
+    Sign = gen_sign(AppIdMaps, AppSecret),
+    SignMaps = AppIdMaps#{<<"sign">> => Sign},
+    do_http_req(URL, SignMaps).
+
+do_http_req(URL, PayloadMaps) ->
+    Payload = eutil:urlencode(PayloadMaps),
+    Method = post,
+    Options = [{pool, flyme}],
+    {ok, _StatusCode, _RespHeaders, ClientRef} = hackney:request(Method, URL, ?HEADERS,
+                                                                 Payload, Options),
+    {ok, ResultBin} = hackney:body(ClientRef),
+    Result = eutil:json_decode(ResultBin),
+    %%todo: 1003服务器忙要不要返回队列
+    #{<<"code">> := Code, <<"value">> := Value} = Result,
+    case Code of
+        <<"200">> ->
+            {ok, Result};
+        _ ->
+            ?ERROR_MSG("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
+            {error, Result}
+    end.
+
 
 
 
