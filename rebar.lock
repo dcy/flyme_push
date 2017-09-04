@@ -1,8 +1,8 @@
 {"1.1.0",
-[{<<"certifi">>,{pkg,<<"certifi">>,<<"0.4.0">>},1},
+[{<<"certifi">>,{pkg,<<"certifi">>,<<"2.0.0">>},1},
  {<<"eutil">>,
   {git,"https://github.com/dcy/eutil",
-       {ref,"f3cc8c6aeb1d609ece4454b8a413886ffa5b5182"}},
+       {ref,"9859d0915d6f5c30ceb9abe747d87ea3da4061d0"}},
   0},
  {<<"goldrush">>,
   {git,"git://github.com/DeadZen/goldrush.git",
@@ -10,9 +10,9 @@
   1},
  {<<"hackney">>,
   {git,"https://github.com/benoitc/hackney",
-       {ref,"2e4c6e377d0ef913c24e8af783bed566c1251baa"}},
+       {ref,"ac85ef2a918e1c14875c60c611038f161e0ea2a3"}},
   0},
- {<<"idna">>,{pkg,<<"idna">>,<<"1.2.0">>},1},
+ {<<"idna">>,{pkg,<<"idna">>,<<"5.1.0">>},1},
  {<<"jsone">>,
   {git,"https://github.com/sile/jsone",
        {ref,"e533179d651cc356556bbe5e4b7caddb0919d593"}},
@@ -23,12 +23,14 @@
   0},
  {<<"metrics">>,{pkg,<<"metrics">>,<<"1.0.1">>},1},
  {<<"mimerl">>,{pkg,<<"mimerl">>,<<"1.0.2">>},1},
- {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.0">>},1}]}.
+ {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.1">>},1},
+ {<<"unicode_util_compat">>,{pkg,<<"unicode_util_compat">>,<<"0.3.1">>},2}]}.
 [
 {pkg_hash,[
- {<<"certifi">>, <<"A7966EFB868B179023618D29A407548F70C52466BF1849B9E8EBD0E34B7EA11F">>},
- {<<"idna">>, <<"AC62EE99DA068F43C50DC69ACF700E03A62A348360126260E87F2B54ECED86B2">>},
+ {<<"certifi">>, <<"A0C0E475107135F76B8C1D5BC7EFB33CD3815CB3CF3DEA7AEFDD174DABEAD064">>},
+ {<<"idna">>, <<"D72B4EFFEB324AD5DA3CAB1767CB16B17939004E789D8C0AD5B70F3CEA20C89A">>},
  {<<"metrics">>, <<"25F094DEA2CDA98213CECC3AEFF09E940299D950904393B2A29D191C346A8486">>},
  {<<"mimerl">>, <<"993F9B0E084083405ED8252B99460C4F0563E41729AB42D9074FD5E52439BE88">>},
- {<<"ssl_verify_fun">>, <<"EDEE20847C42E379BF91261DB474FFBE373F8ACB56E9079ACB6038D4E0BF414F">>}]}
+ {<<"ssl_verify_fun">>, <<"28A4D65B7F59893BC2C7DE786DEC1E1555BD742D336043FE644AE956C3497FBE">>},
+ {<<"unicode_util_compat">>, <<"A1F612A7B512638634A603C8F401892AFBF99B8CE93A45041F8AACA99CADB85E">>}]}
 ].
