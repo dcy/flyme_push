@@ -30,14 +30,14 @@
 -define(HEADERS, [{<<"Content-Type">>, <<"application/x-www-form-urlencoded; charset=utf-8">>}]).
 
 varnished(PayloadMaps) ->
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
     do_send(URL, PayloadMaps).
 
 notification(PayloadMaps) ->
     varnished(PayloadMaps).
 
 varnished(AppId, AppSecret, PayloadMaps) when is_map(PayloadMaps) ->
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
     send(AppId, AppSecret, URL, PayloadMaps);
 varnished(PushIds, Title, Content) ->
     {ok, AppId} = application:get_env(flyme_push, app_id),
@@ -57,13 +57,13 @@ varnished(AppId, AppSecret, PushIds, Title, Content) ->
     MessageJson = eutil:json_encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
     PayloadMaps = #{<<"pushIds">> => eutil:to_binary(PushIds),
                     <<"messageJson">> => MessageJson},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/varnished/pushByPushId">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
 
 
 varnished_tags(PayloadMaps) ->
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
     do_send(URL, PayloadMaps).
 
 notification_tags(PayloadMaps) ->
@@ -90,11 +90,11 @@ varnished_tags(AppId, AppSecret, Tags, Scope, Title, Content) ->
                     <<"tagNames">> => Tags,
                     <<"scope">> => Scope,
                     <<"messageJson">> => MessageJson},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
 varnished_all(PayloadMaps) ->
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
     do_send(URL, PayloadMaps).
 
 notification_all(PayloadMaps) ->
@@ -116,11 +116,11 @@ varnished_all(AppId, AppSecret, Title, Content) ->
                       <<"content">> => unicode:characters_to_binary(Content)},
     MessageJson = eutil:json_encode(#{<<"noticeBarInfo">> => NoticeBarInfo}),
     PayloadMaps = #{<<"pushType">> => 0, <<"messageJson">> => MessageJson},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
 unvarnished(PayloadMaps) ->
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/unvarnished/pushByPushId">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/unvarnished/pushByPushId">>,
     do_send(URL, PayloadMaps).
 
 unvarnished(PushIds, Content) ->
@@ -132,11 +132,11 @@ unvarnished(AppId, AppSecret, PushIds, Content) ->
     MessageJson = eutil:json_encode(#{<<"content">> => Content}),
     PayloadMaps = #{<<"pushIds">> => eutil:to_binary(PushIds),
                     <<"messageJson">> => MessageJson},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/unvarnished/pushByPushId">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/unvarnished/pushByPushId">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
 unvarnished_tags(PayloadMaps) ->
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
     do_send(URL, PayloadMaps).
 
 unvarnished_tags(Tags, Scope, Content) ->
@@ -150,11 +150,11 @@ unvarnished_tags(AppId, AppSecret, Tags, Scope, Content) ->
                     <<"tagNames">> => Tags,
                     <<"scope">> => Scope,
                     <<"messageJson">> => MessageJson},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
 unvarnished_all(Maps) when is_map(Maps) ->
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
     do_send(URL, Maps);
 unvarnished_all(Content) ->
     {ok, AppId} = application:get_env(flyme_push, app_id),
@@ -164,7 +164,7 @@ unvarnished_all(Content) ->
 unvarnished_all(AppId, AppSecret, Content) ->
     MessageJson = eutil:json_encode(#{<<"title">> => <<"unvarnished_all">>, <<"content">> => Content}),
     PayloadMaps = #{<<"pushType">> => 1, <<"messageJson">> => MessageJson},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp">>,
     send(AppId, AppSecret, URL, PayloadMaps).
 
 get_register_switch(PushId) ->
@@ -174,7 +174,7 @@ get_register_switch(PushId) ->
 
 get_register_switch(AppId, AppSecret, PushId) ->
     PayloadMaps = #{<<"pushId">> => eutil:to_binary(PushId)},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/message/getRegisterSwitch">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/message/getRegisterSwitch">>,
     http_req(AppId, AppSecret, URL, PayloadMaps).
 
 change_register_switch(PushId, MsgType, SubSwitch) ->
@@ -185,7 +185,7 @@ change_register_switch(PushId, MsgType, SubSwitch) ->
 change_register_switch(AppId, AppSecret, PushId, MsgType, SubSwitch) ->
     PayloadMaps = #{<<"pushId">> => eutil:to_binary(PushId), <<"msgType">> => MsgType,
                     <<"subSwitch">> => SubSwitch},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/message/changeRegisterSwitch">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/message/changeRegisterSwitch">>,
     http_req(AppId, AppSecret, URL, PayloadMaps).
 
 change_all_switch(PushId, SubSwitch) ->
@@ -195,7 +195,7 @@ change_all_switch(PushId, SubSwitch) ->
 
 change_all_switch(AppId, AppSecret, PushId, SubSwitch) ->
     PayloadMaps = #{<<"pushId">> => PushId, <<"subSwitch">> => SubSwitch},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/message/changeAllSwitch">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/message/changeAllSwitch">>,
     http_req(AppId, AppSecret, URL, PayloadMaps).
 
 subscribe_tags(PushId, Tags) ->
@@ -205,7 +205,7 @@ subscribe_tags(PushId, Tags) ->
 
 subscribe_tags(AppId, AppSecret, PushId, Tags) ->
     PayloadMaps = #{<<"pushId">> => PushId, <<"tags">> => Tags},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/message/subscribeTags">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/message/subscribeTags">>,
     http_req(AppId, AppSecret, URL, PayloadMaps).
 
 unsubscribe_tags(PushId, Tags) ->
@@ -215,7 +215,7 @@ unsubscribe_tags(PushId, Tags) ->
 
 unsubscribe_tags(AppId, AppSecret, PushId, Tags) ->
     PayloadMaps = #{<<"pushId">> => PushId, <<"tags">> => Tags},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/message/unSubscribeTags">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/message/unSubscribeTags">>,
     http_req(AppId, AppSecret, URL, PayloadMaps).
 
 unsub_all_tags(PushId) ->
@@ -225,7 +225,7 @@ unsub_all_tags(PushId) ->
 
 unsub_all_tags(AppId, AppSecret, PushId) ->
     PayloadMaps = #{<<"pushId">> => PushId},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/message/unSubAllTags">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/message/unSubAllTags">>,
     http_req(AppId, AppSecret, URL, PayloadMaps).
 
 
@@ -236,7 +236,7 @@ get_sub_tags(PushId) ->
 
 get_sub_tags(AppId, AppSecret, PushId) ->
     PayloadMaps = #{<<"pushId">> => PushId},
-    URL = <<"http://api-push.meizu.com/garcia/api/server/message/getSubTags">>,
+    URL = <<"http://server-api-push.meizu.com/garcia/api/server/message/getSubTags">>,
     http_req(AppId, AppSecret, URL, PayloadMaps).
 
 
