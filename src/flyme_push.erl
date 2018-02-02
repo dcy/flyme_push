@@ -245,7 +245,6 @@ get_sub_tags(AppId, AppSecret, PushId) ->
 
 
 
-    
 
 
 
@@ -279,11 +278,11 @@ do_send(URL, PayloadMaps) ->
                 true ->
                     {ok, Result};
                 false ->
-                    ?ERROR_MSG("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
+                    error_logger:error_msg("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
                     {push_id_illegal, Result}
             end;
         _ ->
-            ?ERROR_MSG("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
+            error_logger:error_msg("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
             {error, Result}
     end.
 
@@ -307,7 +306,7 @@ do_http_req(URL, PayloadMaps) ->
         <<"200">> ->
             {ok, Result};
         _ ->
-            ?ERROR_MSG("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
+            error_logger:error_msg("flyme_push error, PayloadMaps:~p, Result:~p", [PayloadMaps, Result]),
             {error, Result}
     end.
 
